@@ -42,7 +42,33 @@
       <a href="#work" data-magnetic>Work</a>
       <a href="#contact" data-magnetic>Contact</a>
     </nav>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </header>
+
+  <!-- Full-screen mobile menu -->
+  <div id="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-logo">TROY</span>
+      <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Закрыть меню">
+        <span></span><span></span>
+      </button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#about"><span class="mnl-num">01</span><span class="mnl-title">About</span><span class="mnl-arrow">→</span></a>
+      <a href="#skills"><span class="mnl-num">02</span><span class="mnl-title">Stack</span><span class="mnl-arrow">→</span></a>
+      <a href="#work"><span class="mnl-num">03</span><span class="mnl-title">Work</span><span class="mnl-arrow">→</span></a>
+      <a href="#contact"><span class="mnl-num">04</span><span class="mnl-title">Contact</span><span class="mnl-arrow">→</span></a>
+    </nav>
+    <div class="mobile-menu-footer">
+      <a href="mailto:alentroyan@gmail.com" class="mobile-menu-email">alentroyan@gmail.com</a>
+      <div class="mobile-menu-socials">
+        <a href="https://t.me/Nerwhul" target="_blank" rel="noopener">TG</a>
+        <a href="https://github.com/NeMo191207191207" target="_blank" rel="noopener">GH</a>
+      </div>
+    </div>
+  </div>
 
   <main>
 
@@ -277,7 +303,7 @@
           </div>
         </div>
 
-        <h2 class="contact-cta reveal-up">LET'S<br>WORK.</h2>
+        <h2 class="contact-cta">LET'S<br>WORK.</h2>
 
         <!-- Marquee ticker -->
         <div class="contact-ticker" aria-hidden="true">

@@ -153,7 +153,7 @@ body.cursor--clicking #cursor-ring {
 #nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 1000;
+  z-index: 1002;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -599,7 +599,8 @@ body.cursor--clicking #cursor-ring {
   z-index: 0;
 }
 
-.skill-card:hover::before { height: 100%; }
+.skill-card:hover::before,
+.skill-card:active::before { height: 100%; }
 
 .skill-name,
 .skill-level {
@@ -622,7 +623,10 @@ body.cursor--clicking #cursor-ring {
   text-transform: uppercase;
 }
 
-.skill-card:hover .skill-level { color: rgba(255,255,255,0.7); }
+.skill-card:hover .skill-level,
+.skill-card:active .skill-level { color: rgba(255,255,255,0.7); }
+
+.skill-card:active .skill-name { color: var(--white); }
 
 /* ============================================================
    WORK / PROJECTS
@@ -1121,106 +1125,334 @@ body.cursor--clicking #cursor-ring {
 }
 
 /* ============================================================
+   MOBILE NAV — hamburger button
+   ============================================================ */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: none;
+  flex-shrink: 0;
+  z-index: 1002;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--white);
+  transform-origin: center;
+  transition: transform 0.35s var(--ease-expo), opacity 0.2s ease;
+}
+
+.nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ============================================================
+   MOBILE MENU — full-screen overlay (redesigned)
+   ============================================================ */
+#mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-100%);
+  transition: transform 0.55s cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+
+#mobile-menu.open {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Header row: logo + close button */
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: var(--nav-h);
+  border-bottom: 1px solid var(--gray-600);
+  flex-shrink: 0;
+}
+
+.mobile-menu-logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.04em;
+}
+
+/* X close button */
+.mobile-menu-close {
+  width: 44px;
+  height: 44px;
+  position: relative;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mobile-menu-close span {
+  position: absolute;
+  width: 20px;
+  height: 1.5px;
+  background: var(--white);
+  transition: background 0.2s ease;
+}
+
+.mobile-menu-close span:nth-child(1) { transform: rotate(45deg); }
+.mobile-menu-close span:nth-child(2) { transform: rotate(-45deg); }
+.mobile-menu-close:active span { background: var(--red); }
+
+/* Nav links area — fills the space between header and footer */
+.mobile-nav-links {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.mobile-nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-bottom: 1px solid var(--gray-600);
+  padding: 1.15rem 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 10vw, 3.4rem);
+  font-weight: 800;
+  color: var(--white);
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mobile-nav-links a:first-child {
+  border-top: 1px solid var(--gray-600);
+}
+
+.mobile-nav-links a:active { color: var(--red); }
+.mobile-nav-links a:active .mnl-arrow { color: var(--red); transform: translateX(4px); }
+
+/* Number badge (red) */
+.mnl-num {
+  font-family: var(--font);
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--red);
+  width: 22px;
+  flex-shrink: 0;
+  margin-top: 0.15em;
+}
+
+/* Link title */
+.mnl-title { flex: 1; }
+
+/* Arrow */
+.mnl-arrow {
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--gray-400);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+/* Footer row: email + socials */
+.mobile-menu-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  border-top: 1px solid var(--gray-600);
+  flex-shrink: 0;
+}
+
+.mobile-menu-email {
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.mobile-menu-email:active { color: var(--white); }
+
+.mobile-menu-socials {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.mobile-menu-socials a {
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.mobile-menu-socials a:active {
+  color: var(--red);
+}
+
+/* ============================================================
    TOUCH DEVICES — hide custom cursor, restore native pointer
    ============================================================ */
 @media (hover: none) and (pointer: coarse) {
   html { cursor: auto; }
   a, button { cursor: auto; }
   #cursor { display: none !important; }
-  /* Intro panel: un-sticky on touch (no hover scroll effect anyway) */
+
   .intro-panel {
     position: relative !important;
     height: auto !important;
-    min-height: 55vh;
+    min-height: auto;
+    text-align: left !important;
+    align-items: flex-start !important;
   }
+  .intro-chips { justify-content: flex-start !important; }
+  .intro-cta { align-self: flex-start !important; }
+
+  .player-btn { min-width: 44px; min-height: 44px; }
+  .player-progress-wrapper { height: 12px !important; }
+  .player-volume { height: 12px !important; }
+  .player-volume::-webkit-slider-thumb { width: 20px !important; height: 20px !important; }
+
+  /* All reveal-up content is always visible on touch — no risk of hidden sections */
+  .reveal-up { opacity: 1 !important; transform: none !important; }
+
+  /* Larger tap targets */
+  .contact-item { min-height: 60px; }
+  .project-item { min-height: 52px; }
+  #player-play { width: 52px !important; height: 52px !important; }
+
+  /* Game canvas captures touch without scrolling the page */
+  #game-canvas { touch-action: none; }
 }
 
 /* ============================================================
-   RESPONSIVE — tablet (≤900px)
+   RESPONSIVE — tablet (<=900px)
    ============================================================ */
 @media (max-width: 900px) {
   #nav { padding: 0 1.5rem; }
 
-  /* Hero: JS handles title padding; section stays padless */
-  #hero { padding: 0; }
-
-  /* Intro: stack vertically */
   #intro { flex-direction: column; }
   .intro-panel {
     position: relative;
     width: 100%;
     height: auto;
-    min-height: 55vh;
-    padding: 3.5rem 1.5rem;
+    padding: 4rem 2rem;
+    text-align: left;
+    align-items: flex-start;
   }
+  .intro-chips { justify-content: flex-start; }
+  .intro-cta { align-self: flex-start; }
   .intro-photos { padding: 0; }
-  .intro-photo { height: 70vw; }
+  .intro-photo { height: 75vw; max-height: 380px; }
 
-  /* About */
-  #about { grid-template-columns: 1fr; padding: 5rem 1.5rem; gap: 2rem; }
+  #about { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 2rem; }
   .about-right { display: none; }
 
-  /* Sections */
-  .section-header { padding: 4rem 1.5rem 2rem; }
-  .skills-grid { padding: 0 1.5rem; }
+  .section-header { padding: 4rem 2rem 2rem; }
+  .skills-grid { padding: 0 2rem; }
   .skill-row { grid-template-columns: repeat(2, 1fr); }
 
-  /* Projects */
-  .projects-list { padding: 0 1.5rem; }
+  .projects-list { padding: 0 2rem; }
   .project-item { grid-template-columns: 48px 1fr; gap: 0 1rem; }
   .project-tags { display: none; }
 
-  /* Contact */
-  .contact-inner { padding: 4rem 1.5rem; }
+  .contact-inner { padding: 4rem 2rem; }
   .contact-grid { grid-template-columns: 1fr 1fr; }
   .contact-top { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   .contact-cta { font-size: clamp(3.5rem, 13vw, 8rem); }
 
-  /* Footer */
   #footer { grid-template-columns: 1fr; }
-  #music-player { border-right: none; border-bottom: 1px solid var(--gray-600); padding: 2rem 1.5rem; }
-  #game-container { padding: 2rem 1.5rem; }
-  #footer-bar { padding: 1.25rem 1.5rem; }
+  #music-player { border-right: none; border-bottom: 1px solid var(--gray-600); }
+  #game-container { padding: 2rem; }
+  #footer-bar { padding: 1.25rem 2rem; }
 }
 
 /* ============================================================
-   RESPONSIVE — small phones (≤480px)
+   RESPONSIVE — show hamburger (<=680px)
+   ============================================================ */
+@media (max-width: 680px) {
+  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+}
+
+/* ============================================================
+   RESPONSIVE — phones (<=480px)
    ============================================================ */
 @media (max-width: 480px) {
-  /* Hero nav: shrink + wrap */
-  .hero-nav { gap: 0.5rem !important; flex-wrap: wrap; padding-top: 0.6rem !important; padding-bottom: 0.6rem !important; }
-  .hero-nav a { font-size: clamp(0.55rem, 3vw, 0.8rem) !important; }
-  .hero-nav-mark { font-size: clamp(0.55rem, 3vw, 0.8rem) !important; }
+  .hero-nav {
+    gap: 0.5rem !important;
+    flex-wrap: wrap;
+    padding-top: 0.65rem !important;
+    padding-bottom: 0.65rem !important;
+  }
+  .hero-nav a { font-size: clamp(0.55rem, 2.8vw, 0.8rem) !important; }
+  .hero-nav-mark { font-size: clamp(0.55rem, 2.8vw, 0.8rem) !important; }
 
-  /* Intro */
-  .intro-heading { font-size: clamp(2rem, 9vw, 3rem); }
-  .intro-panel { padding: 3rem 1.2rem; min-height: 45vh; }
-  .intro-photo { height: 90vw; }
+  .intro-panel { padding: 3rem 1.2rem; }
+  .intro-heading { font-size: clamp(2.2rem, 10vw, 3.2rem); }
+  .intro-bio { font-size: 0.78rem; }
+  .intro-photo { height: 80vw; max-height: 300px; }
 
-  /* About */
-  .about-heading { font-size: clamp(1.8rem, 8vw, 2.8rem); }
   #about { padding: 4rem 1.2rem; }
+  .about-heading { font-size: clamp(2rem, 9vw, 3rem); }
+  .about-body { font-size: 0.8rem; }
 
-  /* Skills */
   .section-header { padding: 3rem 1.2rem 1.5rem; }
+  .section-title { font-size: clamp(1.8rem, 7vw, 2.5rem); margin-bottom: 2.5rem; }
   .skills-grid { padding: 0 1.2rem; }
-  .skill-row { grid-template-columns: 1fr 1fr; }
-  .skill-card { padding: 0.9rem 0.8rem; }
+  .skill-card { padding: 0.9rem 0.8rem; min-height: 44px; }
 
-  /* Projects */
   .projects-list { padding: 0 1.2rem; }
 
-  /* Contact */
   .contact-inner { padding: 3rem 1.2rem; }
   .contact-grid { grid-template-columns: 1fr; }
-  .contact-item { padding: 1.5rem 1.2rem; }
-  .contact-status span:last-child { font-size: 0.5rem; letter-spacing: 0.2em; }
+  .contact-item { padding: 1.4rem 1.2rem; min-height: 80px; }
+  .contact-ticker { margin: 2rem 0; }
 
-  /* Footer */
   #music-player { padding: 1.5rem 1.2rem; }
+  .player-btn--play { width: 48px !important; height: 48px !important; }
   #game-container { padding: 1.5rem 1rem; }
-  .game-instructions { font-size: 0.45rem; letter-spacing: 0.1em; }
-  #footer-bar { padding: 1rem 1.2rem; flex-direction: column; gap: 0.4rem; }
+  .game-instructions { font-size: 0.45rem; }
+  #footer-bar { padding: 1rem 1.2rem; flex-direction: column; gap: 0.3rem; text-align: center; }
+  .section-label { font-size: 0.55rem; }
+  .contact-top { gap: 0.5rem; }
+}
+
+/* ============================================================
+   TINY PHONES (<=380px)
+   ============================================================ */
+@media (max-width: 380px) {
+  .hero-nav {
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+    align-items: flex-start !important;
+  }
+  .hero-eyebrow { font-size: 0.52rem !important; letter-spacing: 0.16em !important; }
+  .hero-tagline { font-size: 0.65rem !important; }
+  .contact-cta { font-size: clamp(3rem, 12vw, 4.5rem) !important; }
 }
 
 /* ============================================================

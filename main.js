@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fitHeroDisplay();
   if (!isTouchDevice) initCursor();
   initNav();
+  initMobileMenu();
   initHeroAnimation();
   initIntroPhotos();
   initScrollReveal();
@@ -31,9 +32,9 @@ function fitHeroDisplay() {
   const nav  = document.querySelector('.hero-nav');
   if (!el || !line) return;
 
-  const MARGIN = 28; // px — gap from each screen edge
-
   function fit() {
+    const MARGIN = window.innerWidth < 480 ? 14 : 28; // narrower margin on phones
+
     // Apply side margins to title
     el.style.paddingLeft  = MARGIN + 'px';
     el.style.paddingRight = MARGIN + 'px';
@@ -70,6 +71,53 @@ function fitHeroDisplay() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(fit, 80);
   }, { passive: true });
+}
+
+/* ============================================================
+   MOBILE MENU
+   ============================================================ */
+function initMobileMenu() {
+  const toggle = document.getElementById('nav-toggle');
+  const menu   = document.getElementById('mobile-menu');
+  if (!toggle || !menu) return;
+
+  function open()  {
+    toggle.classList.add('open');
+    menu.classList.add('open');
+    toggle.setAttribute('aria-expanded', 'true');
+    menu.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    gsap.fromTo('.mobile-nav-links a',
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.45, stagger: 0.07, ease: 'power3.out', delay: 0.2 }
+    );
+  }
+  function close() {
+    toggle.classList.remove('open');
+    menu.classList.remove('open');
+    toggle.setAttribute('aria-expanded', 'false');
+    menu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  toggle.addEventListener('click', () =>
+    toggle.classList.contains('open') ? close() : open()
+  );
+
+  const closeBtn = document.getElementById('mobile-menu-close');
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  menu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      close();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        setTimeout(() => {
+          gsap.to(window, { duration: 1, scrollTo: { y: target, offsetY: 60 }, ease: 'power3.inOut' });
+        }, 350);
+      }
+    });
+  });
 }
 
 /* ============================================================
@@ -171,24 +219,26 @@ function initIntroPhotos() {
     }
   });
 
-  // Subtle scroll-in for each photo
-  document.querySelectorAll('.intro-photo').forEach((photo, i) => {
-    gsap.fromTo(photo,
-      { opacity: 0, y: 60 },
-      {
-        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-        scrollTrigger: { trigger: photo, start: 'top 88%', toggleActions: 'play none none none' }
+  if (!isTouchDevice) {
+    // Subtle scroll-in for each photo
+    document.querySelectorAll('.intro-photo').forEach((photo, i) => {
+      gsap.fromTo(photo,
+        { opacity: 0, y: 60 },
+        {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: photo, start: 'top 88%', toggleActions: 'play none none none' }
+        }
+      );
+    });
+
+    // Intro panel text reveal
+    gsap.fromTo('.intro-panel',
+      { opacity: 0, x: -40 },
+      { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: '#intro', start: 'top 85%', toggleActions: 'play none none none' }
       }
     );
-  });
-
-  // Intro panel text reveal
-  gsap.fromTo('.intro-panel',
-    { opacity: 0, x: -40 },
-    { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-      scrollTrigger: { trigger: '#intro', start: 'top 85%', toggleActions: 'play none none none' }
-    }
-  );
+  }
 }
 
 /* ============================================================
@@ -206,15 +256,17 @@ function initHeroAnimation() {
    SCROLL REVEAL
    ============================================================ */
 function initScrollReveal() {
-  gsap.utils.toArray('.reveal-up').forEach(el => {
-    gsap.fromTo(el,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1, y: 0, duration: 0.85, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
-      }
-    );
-  });
+  if (!isTouchDevice) {
+    gsap.utils.toArray('.reveal-up').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1, y: 0, duration: 0.85, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        }
+      );
+    });
+  }
 
   ScrollTrigger.create({
     trigger: '#skills', start: 'top 75%', once: true,
@@ -326,11 +378,14 @@ function initMusicPlayer() {
   playBtn.addEventListener('click', () => isPlaying ? pause() : play());
   audio.addEventListener('ended', pause);
 
-  progressBar.addEventListener('click', (e) => {
+  function seekFromEvent(e) {
     if (!audio.duration) return;
     const rect = progressBar.getBoundingClientRect();
-    audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
-  });
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    audio.currentTime = ((clientX - rect.left) / rect.width) * audio.duration;
+  }
+  progressBar.addEventListener('click', seekFromEvent);
+  progressBar.addEventListener('touchstart', seekFromEvent, { passive: false });
   volumeSlider.addEventListener('input', (e) => { audio.volume = +e.target.value; });
 
   function fmt(s) {
