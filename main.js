@@ -208,36 +208,48 @@ function initNav() {
    INTRO PHOTOS
    ============================================================ */
 function initIntroPhotos() {
-  // Hide placeholder when real image loads
   document.querySelectorAll('.intro-photo img').forEach(img => {
     const placeholder = img.nextElementSibling;
     if (img.complete && img.naturalWidth > 0) {
-      placeholder.style.display = 'none';
+      if (placeholder) placeholder.style.display = 'none';
     } else {
-      img.addEventListener('load', () => { placeholder.style.display = 'none'; });
-      img.addEventListener('error', () => { img.style.display = 'none'; });
+      img.addEventListener('load', () => {
+        if (placeholder) placeholder.style.display = 'none';
+      });
+      img.addEventListener('error', () => {
+        img.style.display = 'none';
+        // Show number placeholder as fallback when image fails to load
+        if (placeholder) placeholder.style.display = 'flex';
+      });
     }
   });
 
   if (!isTouchDevice) {
-    // Subtle scroll-in for each photo
     document.querySelectorAll('.intro-photo').forEach((photo, i) => {
       gsap.fromTo(photo,
         { opacity: 0, y: 60 },
         {
           opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: photo, start: 'top 88%', toggleActions: 'play none none none' }
+          scrollTrigger: {
+            trigger: photo,
+            start: 'top 88%',
+            toggleActions: 'play none none none',
+            once: true,
+            onEnter: () => gsap.to(photo, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' })
+          }
         }
       );
     });
 
-    // Intro panel text reveal
     gsap.fromTo('.intro-panel',
       { opacity: 0, x: -40 },
       { opacity: 1, x: 0, duration: 1, ease: 'power3.out',
-        scrollTrigger: { trigger: '#intro', start: 'top 85%', toggleActions: 'play none none none' }
+        scrollTrigger: { trigger: '#intro', start: 'top 85%', toggleActions: 'play none none none', once: true }
       }
     );
+
+    // Recalculate trigger positions after fonts/images finish loading
+    setTimeout(() => ScrollTrigger.refresh(), 600);
   }
 }
 
