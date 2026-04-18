@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alen Troyan — EdTech Producer & FullStack Dev</title>
+  <meta name="description" content="Alen Troyan — EdTech Launch Producer and FullStack Developer. Building things that convert.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Syne:wght@800&family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
+  <script src="game.js" defer></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div id="cursor">
+    <div id="cursor-meeple">
+      <svg id="cursor-svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" aria-hidden="true">
+        <path fill="currentColor" d="M192.215 39.565c-48.32 6.48-43.031 58.948-42.874 75.82l93.895 13.622c1.004-35.647 5.621-59.868 13.545-76.27c2.186-4.523 4.704-8.455 7.469-11.836zm107.012 2.48q-1.755.034-3.57.226c-8.898.937-15.873 4.232-22.669 18.296c-6.795 14.065-11.916 39.331-12.095 80.59l-.026 5.95l-5.484 2.306c-50.104 21.083-82.1 39.796-100.16 55.334s-21.362 26.305-19.541 34.088s10.734 16.375 25.353 23.44c14.62 7.064 33.96 12.409 52.951 15.634l11.293 1.918l-83.045 192.608l120.118-32.106l51.136-112.484l51.045 86.37l113.43-30.929l-86.887-142.223l10.647-3.617c15.087-5.126 32.096-12.698 45.673-21.45c13.578-8.753 23.156-18.91 25.407-26.64c1.125-3.864.992-7.055-1.028-11.146c-2.02-4.09-6.362-9.116-14.296-14.488c-15.869-10.744-45.623-22.39-93.485-32.809l-6.672-1.453l-.398-6.816c-.762-13.052-6.589-35.803-17.293-53.27c-9.366-15.284-21.176-26.136-36.961-27.242a39 39 0 0 0-3.443-.086zm-170.685 87.41c-79.404 44.697-85.83 54.663-86.757 71.6c-2.209 40.397 42.597 46.791 89.698 59.957c-6.026-5.765-11.447-10.033-13.329-18.075c-3.82-16.327 4.783-34.158 25.328-51.834c17.067-14.684 43.279-30.404 80.907-47.62zM93.291 271.788c-22.445 48.26-38.283 103.023-59.254 153.977l87.723 43.328l17.77-35.852l57.154-132.556zm222.283 94.963l-15.752 34.648l43.543 12.375z"/>
+      </svg>
+    </div>
+    <div id="cursor-ring"></div>
+  </div>
+
+  <!-- Noise Texture Overlay -->
+  <div id="noise-overlay" aria-hidden="true"></div>
+
+  <!-- Fixed nav — invisible initially, appears on scroll -->
+  <header id="nav">
+    <div class="nav-logo" data-magnetic>TROY</div>
+    <nav class="nav-links">
+      <a href="#about" data-magnetic>About</a>
+      <a href="#skills" data-magnetic>Stack</a>
+      <a href="#work" data-magnetic>Work</a>
+      <a href="#contact" data-magnetic>Contact</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero — edge-to-edge, studiolinear 1:1 -->
+    <section id="hero">
+
+      <h1 class="hero-display">
+        <span class="line-wrap"><span class="line">ALEN TROYAN</span></span>
+      </h1>
+
+      <nav class="hero-nav">
+        <a href="#about" data-magnetic>ABOUT</a>
+        <a href="#skills" data-magnetic>STACK</a>
+        <a href="#work" data-magnetic>WORK</a>
+        <a href="#contact" data-magnetic>CONTACT</a>
+        <span class="hero-nav-mark">®</span>
+      </nav>
+
+    </section>
+
+    <!-- Intro — sticky bio panel + scrolling photos -->
+    <section id="intro">
+      <div class="intro-panel">
+        <p class="intro-eyebrow">ALEN TROYAN — 2026</p>
+        <h2 class="intro-heading">EdTech<br>Producer<br>&amp; Dev.</h2>
+        <p class="intro-bio">
+          Продюсирую запуски и превращаю экспертность в масштабируемые системы дохода. <br>Выстраиваю маркетинг, настраиваю воронки, создаю системы, пишу код.
+        </p>
+        <div class="intro-chips">
+          <span class="chip">EdTech Launch</span>
+          <span class="chip">FullStack</span>
+          <span class="chip">Funnels</span>
+        </div>
+        <a href="#contact" class="intro-cta" data-magnetic>Связаться →</a>
+      </div>
+      <div class="intro-photos">
+        <div class="intro-photo">
+          <img src="public/photo_3_2026-04-18_09-21-04.jpg" alt="Alen Troyan — photo 3">
+          <div class="intro-photo-placeholder"><span>03</span></div>
+        </div>
+        <div class="intro-photo">
+          <img src="public/photo_2_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 2">
+          <div class="intro-photo-placeholder"><span>02</span></div>
+        </div>
+        <div class="intro-photo">
+          <img src="public/photo_1_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 1">
+          <div class="intro-photo-placeholder"><span>01</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <div class="about-left">
+        <p class="section-label reveal-up">001 — ABOUT</p>
+        <h2 class="about-heading reveal-up">Запуски.<br>Код.<br>Результат.</h2>
+        <p class="about-body reveal-up">
+          Я — Ален Троян. Продюсирую образовательные запуски и сторою продукты с нуля до первых продаж. <br>
+          <br>Создаю лучшие проекты, работающие во благо людям. <br>
+          <br>Пишу код, выстраиваю маркетинг, создаю команды, настраиваю воронки, создаю системы. Если задача требует и стратегии, и технологии — я тот, кто это объединяет.
+        </p>
+        <div class="about-links reveal-up">
+          <a href="#contact" class="about-cta" data-magnetic>Связаться →</a>
+        </div>
+      </div>
+      <div class="about-right" aria-hidden="true">
+        <span class="about-deco">TROY</span>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+      <div class="section-header">
+        <p class="section-label reveal-up">002 — STACK</p>
+        <h2 class="section-title reveal-up">Инструменты</h2>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <p class="skill-cat-label">LANGUAGES</p>
+          <div class="skill-row">
+            <div class="skill-card" data-level="Expert">
+              <span class="skill-name">JavaScript</span>
+              <span class="skill-level">Expert</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">TypeScript</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Intermediate">
+              <span class="skill-name">PHP</span>
+              <span class="skill-level">Intermediate</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">SQL</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+          </div>
+        </div>
+        <div class="skill-category">
+          <p class="skill-cat-label">FRAMEWORKS</p>
+          <div class="skill-row">
+            <div class="skill-card" data-level="Expert">
+              <span class="skill-name">React</span>
+              <span class="skill-level">Expert</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Next.js</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Node.js</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Intermediate">
+              <span class="skill-name">FastAPI</span>
+              <span class="skill-level">Intermediate</span>
+            </div>
+          </div>
+        </div>
+        <div class="skill-category">
+          <p class="skill-cat-label">TOOLS &amp; PLATFORMS</p>
+          <div class="skill-row">
+            <div class="skill-card" data-level="Expert">
+              <span class="skill-name">Git</span>
+              <span class="skill-level">Expert</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Docker</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Figma</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Vercel</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+          </div>
+        </div>
+        <div class="skill-category">
+          <p class="skill-cat-label">EDTECH / STRATEGY</p>
+          <div class="skill-row">
+            <div class="skill-card" data-level="Expert">
+              <span class="skill-name">EdTech Launch</span>
+              <span class="skill-level">Expert</span>
+            </div>
+            <div class="skill-card" data-level="Expert">
+              <span class="skill-name">Funnels</span>
+              <span class="skill-level">Expert</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">CRM Setup</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+            <div class="skill-card" data-level="Advanced">
+              <span class="skill-name">Analytics</span>
+              <span class="skill-level">Advanced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Work -->
+    <section id="work">
+      <div class="section-header">
+        <p class="section-label reveal-up">003 — WORK</p>
+        <h2 class="section-title reveal-up">Проекты</h2>
+      </div>
+      <div class="projects-list">
+        <div class="project-item reveal-up">
+          <span class="project-num">01</span>
+          <div class="project-info">
+            <h3 class="project-title">EdTech Platform</h3>
+            <p class="project-desc">Образовательная платформа с автоматизированными воронками продаж</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">2025</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">02</span>
+          <div class="project-info">
+            <h3 class="project-title">Launch System</h3>
+            <p class="project-desc">Система управления запусками онлайн-курсов с аналитикой</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">Python</span>
+            <span class="tag">2024</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">03</span>
+          <div class="project-info">
+            <h3 class="project-title">CRM Integration</h3>
+            <p class="project-desc">Интеграция CRM с образовательными платформами и мессенджерами</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">API</span>
+            <span class="tag">Docker</span>
+            <span class="tag">2024</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">04</span>
+          <div class="project-info">
+            <h3 class="project-title">Business Card Site</h3>
+            <p class="project-desc">Этот самый сайт — визитка с игрой и музыкой</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">GSAP</span>
+            <span class="tag">Canvas</span>
+            <span class="tag">2026</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <div class="contact-inner">
+
+        <div class="contact-top reveal-up">
+          <p class="section-label">004 — CONTACT</p>
+          <div class="contact-status">
+            <span class="status-dot"></span>
+            <span>AVAILABLE FOR PROJECTS — 2026</span>
+          </div>
+        </div>
+
+        <h2 class="contact-cta reveal-up">LET'S<br>WORK.</h2>
+
+        <!-- Marquee ticker -->
+        <div class="contact-ticker" aria-hidden="true">
+          <div class="ticker-track">
+            <span>AVAILABLE &nbsp;·&nbsp; LET'S BUILD &nbsp;·&nbsp; ALEN TROYAN &nbsp;·&nbsp; EdTech Producer &nbsp;·&nbsp; FullStack Dev &nbsp;·&nbsp; Запуски &nbsp;·&nbsp; Воронки &nbsp;·&nbsp; </span>
+            <span>AVAILABLE &nbsp;·&nbsp; LET'S BUILD &nbsp;·&nbsp; ALEN TROYAN &nbsp;·&nbsp; EdTech Producer &nbsp;·&nbsp; FullStack Dev &nbsp;·&nbsp; Запуски &nbsp;·&nbsp; Воронки &nbsp;·&nbsp; </span>
+            <span>AVAILABLE &nbsp;·&nbsp; LET'S BUILD &nbsp;·&nbsp; ALEN TROYAN &nbsp;·&nbsp; EdTech Producer &nbsp;·&nbsp; FullStack Dev &nbsp;·&nbsp; Запуски &nbsp;·&nbsp; Воронки &nbsp;·&nbsp; </span>
+            <span>AVAILABLE &nbsp;·&nbsp; LET'S BUILD &nbsp;·&nbsp; ALEN TROYAN &nbsp;·&nbsp; EdTech Producer &nbsp;·&nbsp; FullStack Dev &nbsp;·&nbsp; Запуски &nbsp;·&nbsp; Воронки &nbsp;·&nbsp; </span>
+          </div>
+        </div>
+
+        <!-- Contact cards grid -->
+        <div class="contact-grid reveal-up">
+          <a href="mailto:alentroyan@gmail.com" class="contact-item" data-magnetic>
+            <span class="contact-item-label">EMAIL</span>
+            <span class="contact-item-value">alentroyan@gmail.com</span>
+            <span class="contact-item-arrow">↗</span>
+          </a>
+          <a href="https://t.me/Nerwhul" target="_blank" rel="noopener" class="contact-item" data-magnetic>
+            <span class="contact-item-label">TELEGRAM</span>
+            <span class="contact-item-value">@Nerwhul</span>
+            <span class="contact-item-arrow">↗</span>
+          </a>
+          <a href="https://t.me/alen_t_r1" target="_blank" rel="noopener" class="contact-item" data-magnetic>
+            <span class="contact-item-label">TG CHANNEL</span>
+            <span class="contact-item-value">@alen_t_r1</span>
+            <span class="contact-item-arrow">↗</span>
+          </a>
+          <a href="https://github.com/NeMo191207191207" target="_blank" rel="noopener" class="contact-item" data-magnetic>
+            <span class="contact-item-label">GITHUB</span>
+            <span class="contact-item-value">NeMo191207191207</span>
+            <span class="contact-item-arrow">↗</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <!-- Music Player -->
+    <div id="music-player">
+      <p class="footer-label">NOW PLAYING</p>
+      <p class="player-track-name" id="player-track-name">— no track loaded —</p>
+      <div class="player-controls">
+        <button class="player-btn" id="player-prev" title="Previous" aria-label="Previous">&#9664;&#9664;</button>
+        <button class="player-btn player-btn--play" id="player-play" title="Play / Pause" aria-label="Play">&#9654;</button>
+        <button class="player-btn" id="player-next" title="Next" aria-label="Next">&#9654;&#9654;</button>
+      </div>
+      <div class="player-progress-wrapper" id="player-progress-wrapper" role="slider" aria-label="Seek">
+        <div class="player-progress-fill" id="player-progress-fill"></div>
+      </div>
+      <div class="player-time">
+        <span id="player-current">0:00</span>
+        <span id="player-total">0:00</span>
+      </div>
+      <div class="player-volume-wrapper">
+        <span class="volume-icon">&#9834;</span>
+        <input type="range" class="player-volume" id="player-volume" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">
+      </div>
+    </div>
+
+    <!-- Game -->
+    <div id="game-container">
+      <p class="footer-label">PLAY DINO</p>
+      <canvas id="game-canvas" role="application" aria-label="Dino Runner game"></canvas>
+      <p class="game-instructions">SPACE / CLICK — JUMP &nbsp;|&nbsp; DOUBLE-JUMP SUPPORTED</p>
+    </div>
+
+    <!-- Footer bottom bar -->
+    <div id="footer-bar">
+      <span class="footer-copy">© 2026 Alen Troyan</span>
+      <span class="footer-built">Built with intention.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
