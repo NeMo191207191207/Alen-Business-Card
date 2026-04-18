@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileMenu();
   initHeroAnimation();
   initIntroPhotos();
+  initCarousel();
   initScrollReveal();
   if (!isTouchDevice) initMagneticElements();
   initProjectHover();
@@ -251,6 +252,93 @@ function initIntroPhotos() {
     // Recalculate trigger positions after fonts/images finish loading
     setTimeout(() => ScrollTrigger.refresh(), 600);
   }
+}
+
+/* ============================================================
+   INTRO CAROUSEL — mobile only (< 900px)
+   ============================================================ */
+function initCarousel() {
+  if (window.innerWidth >= 900) return;
+
+  const container = document.querySelector('.intro-photos');
+  if (!container) return;
+
+  const slides = Array.from(container.querySelectorAll('.intro-photo'));
+  if (slides.length < 2) return;
+
+  // Wrap all slides in a track div
+  const track = document.createElement('div');
+  track.className = 'carousel-track';
+  slides.forEach(s => track.appendChild(s));
+  container.appendChild(track);
+
+  // Build dot buttons
+  const dotsEl = document.createElement('div');
+  dotsEl.className = 'carousel-dots';
+  const dots = slides.map((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    btn.setAttribute('aria-label', 'Фото ' + (i + 1));
+    btn.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(btn);
+    return btn;
+  });
+  container.appendChild(dotsEl);
+
+  // Slide counter "01 / 04"
+  const counter = document.createElement('span');
+  counter.className = 'carousel-counter';
+  container.appendChild(counter);
+
+  let current = 0;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function goTo(index) {
+    current = ((index % slides.length) + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    counter.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+  }
+
+  goTo(0); // set initial state
+
+  // Touch swipe
+  let startX = 0;
+  let startTime = 0;
+
+  container.addEventListener('touchstart', e => {
+    startX    = e.touches[0].clientX;
+    startTime = Date.now();
+  }, { passive: true });
+
+  container.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dt = Date.now() - startTime;
+    if (Math.abs(dx) > 45 && dt < 450) {
+      goTo(dx < 0 ? current + 1 : current - 1);
+    }
+  }, { passive: true });
+
+  // Pointer drag (mouse / stylus on tablets)
+  let pointerStartX = 0;
+  let pointerDown   = false;
+
+  container.addEventListener('pointerdown', e => {
+    pointerStartX = e.clientX;
+    pointerDown   = true;
+    startTime     = Date.now();
+  }, { passive: true });
+
+  container.addEventListener('pointerup', e => {
+    if (!pointerDown) return;
+    pointerDown = false;
+    const dx = e.clientX - pointerStartX;
+    const dt = Date.now() - startTime;
+    if (Math.abs(dx) > 45 && dt < 450) {
+      goTo(dx < 0 ? current + 1 : current - 1);
+    }
+  }, { passive: true });
 }
 
 /* ============================================================
