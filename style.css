@@ -1227,7 +1227,7 @@ body.cursor--clicking #cursor-ring {
   border-bottom: 1px solid var(--gray-600);
   padding: 1.15rem 0;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 10vw, 3.4rem);
+  font-size: clamp(1.5rem, 7.5vw, 3rem);
   font-weight: 800;
   color: var(--white);
   text-transform: uppercase;
