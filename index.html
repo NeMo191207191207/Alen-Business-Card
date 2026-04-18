@@ -375,10 +375,13 @@
     <div id="game-container">
       <p class="footer-label">PLAY DINO</p>
 
-      <!-- Runner mounts here -->
-      <div class="interstitial-wrapper" id="dino-wrapper"></div>
+      <!-- Runner outer container — needs explicit width so offsetWidth > 0 on init -->
+      <div id="dino-wrapper" class="interstitial-wrapper">
+        <!-- details-button required by Runner constructor (kept hidden) -->
+        <button id="details-button" style="display:none" aria-hidden="true"></button>
+      </div>
 
-      <!-- Sprite images loaded from CDN (hidden, referenced by runner.js) -->
+      <!-- Sprite images (hidden, referenced by Runner.loadImages) -->
       <div id="offline-resources" style="display:none" aria-hidden="true">
         <div id="offline-resources-1x">
           <img id="1x-obstacle-large" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-obstacle-large.png" alt="">
@@ -410,7 +413,15 @@
     </div>
   </footer>
 
-  <!-- Chrome Dino runner — must be synchronous (no defer) so DOMContentLoaded fires correctly -->
-  <script src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/scripts/runner.js"></script>
+  <!-- Chrome Dino — local copy, no auto-init (removed last line) -->
+  <script src="dino.js"></script>
+  <script>
+    // Initialize AFTER window.load so all CSS layout is computed and offsetWidth > 0
+    window.addEventListener('load', function() {
+      if (typeof Runner !== 'undefined' && !Runner.instance_) {
+        new Runner('.interstitial-wrapper');
+      }
+    });
+  </script>
 </body>
 </html>
