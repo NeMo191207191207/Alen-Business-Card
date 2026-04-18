@@ -1054,21 +1054,35 @@ body.cursor--clicking #cursor-ring {
   cursor: pointer;
 }
 
-/* --- Game --- */
+/* --- Game (Chrome Dino) --- */
 #game-container {
   padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
-#game-canvas {
+/* Wrapper the runner mounts into */
+#dino-wrapper {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* Runner container created by runner.js */
+.runner-container {
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Canvas — invert colors to match dark theme */
+.runner-canvas {
   display: block;
-  border: 1px solid var(--gray-600);
   max-width: 100%;
   image-rendering: pixelated;
+  filter: invert(1);
 }
 
 .game-instructions {
@@ -1337,7 +1351,7 @@ body.cursor--clicking #cursor-ring {
   #player-play { width: 52px !important; height: 52px !important; }
 
   /* Game canvas captures touch without scrolling the page */
-  #game-canvas { touch-action: none; }
+  .runner-canvas { touch-action: none; }
 }
 
 /* ============================================================
