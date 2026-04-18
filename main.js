@@ -3,16 +3,18 @@
    Requires: GSAP 3 + ScrollTrigger + ScrollToPlugin (CDN, deferred)
    ============================================================ */
 
+const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-  fitHeroDisplay();     // must run BEFORE animation (sets font-size)
-  initCursor();
+  fitHeroDisplay();
+  if (!isTouchDevice) initCursor();
   initNav();
   initHeroAnimation();
   initIntroPhotos();
   initScrollReveal();
-  initMagneticElements();
+  if (!isTouchDevice) initMagneticElements();
   initProjectHover();
   initMusicPlayer();
 });

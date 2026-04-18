@@ -1121,44 +1121,106 @@ body.cursor--clicking #cursor-ring {
 }
 
 /* ============================================================
-   RESPONSIVE
+   TOUCH DEVICES — hide custom cursor, restore native pointer
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+  html { cursor: auto; }
+  a, button { cursor: auto; }
+  #cursor { display: none !important; }
+  /* Intro panel: un-sticky on touch (no hover scroll effect anyway) */
+  .intro-panel {
+    position: relative !important;
+    height: auto !important;
+    min-height: 55vh;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — tablet (≤900px)
    ============================================================ */
 @media (max-width: 900px) {
   #nav { padding: 0 1.5rem; }
 
-  #hero { padding: 1.5rem 1.5rem 0; }
+  /* Hero: JS handles title padding; section stays padless */
+  #hero { padding: 0; }
 
-  .hero-meta-row { flex-wrap: wrap; gap: 0.5rem; }
-
-  #about {
-    grid-template-columns: 1fr;
-    padding: 6rem 1.5rem;
-    gap: 2rem;
+  /* Intro: stack vertically */
+  #intro { flex-direction: column; }
+  .intro-panel {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: 55vh;
+    padding: 3.5rem 1.5rem;
   }
+  .intro-photos { padding: 0; }
+  .intro-photo { height: 70vw; }
 
+  /* About */
+  #about { grid-template-columns: 1fr; padding: 5rem 1.5rem; gap: 2rem; }
   .about-right { display: none; }
-  .section-header { padding: 5rem 1.5rem 2rem; }
+
+  /* Sections */
+  .section-header { padding: 4rem 1.5rem 2rem; }
   .skills-grid { padding: 0 1.5rem; }
   .skill-row { grid-template-columns: repeat(2, 1fr); }
 
+  /* Projects */
   .projects-list { padding: 0 1.5rem; }
-  .project-item { grid-template-columns: 48px 1fr; }
+  .project-item { grid-template-columns: 48px 1fr; gap: 0 1rem; }
   .project-tags { display: none; }
 
-  .contact-inner { padding: 5rem 1.5rem; }
+  /* Contact */
+  .contact-inner { padding: 4rem 1.5rem; }
   .contact-grid { grid-template-columns: 1fr 1fr; }
-  .contact-top { flex-direction: column; align-items: flex-start; }
+  .contact-top { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .contact-cta { font-size: clamp(3.5rem, 13vw, 8rem); }
 
+  /* Footer */
   #footer { grid-template-columns: 1fr; }
-  #music-player { border-right: none; border-bottom: 1px solid var(--gray-600); }
+  #music-player { border-right: none; border-bottom: 1px solid var(--gray-600); padding: 2rem 1.5rem; }
+  #game-container { padding: 2rem 1.5rem; }
   #footer-bar { padding: 1.25rem 1.5rem; }
 }
 
-@media (max-width: 600px) {
-  /* hero-display font-size is controlled by JS fitHeroDisplay() — no CSS override here */
-  .hero-nav { gap: 0.8rem; flex-wrap: wrap; }
+/* ============================================================
+   RESPONSIVE — small phones (≤480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Hero nav: shrink + wrap */
+  .hero-nav { gap: 0.5rem !important; flex-wrap: wrap; padding-top: 0.6rem !important; padding-bottom: 0.6rem !important; }
+  .hero-nav a { font-size: clamp(0.55rem, 3vw, 0.8rem) !important; }
+  .hero-nav-mark { font-size: clamp(0.55rem, 3vw, 0.8rem) !important; }
+
+  /* Intro */
+  .intro-heading { font-size: clamp(2rem, 9vw, 3rem); }
+  .intro-panel { padding: 3rem 1.2rem; min-height: 45vh; }
+  .intro-photo { height: 90vw; }
+
+  /* About */
+  .about-heading { font-size: clamp(1.8rem, 8vw, 2.8rem); }
+  #about { padding: 4rem 1.2rem; }
+
+  /* Skills */
+  .section-header { padding: 3rem 1.2rem 1.5rem; }
+  .skills-grid { padding: 0 1.2rem; }
   .skill-row { grid-template-columns: 1fr 1fr; }
-  #game-container { padding: 2rem 1rem; }
+  .skill-card { padding: 0.9rem 0.8rem; }
+
+  /* Projects */
+  .projects-list { padding: 0 1.2rem; }
+
+  /* Contact */
+  .contact-inner { padding: 3rem 1.2rem; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .contact-item { padding: 1.5rem 1.2rem; }
+  .contact-status span:last-child { font-size: 0.5rem; letter-spacing: 0.2em; }
+
+  /* Footer */
+  #music-player { padding: 1.5rem 1.2rem; }
+  #game-container { padding: 1.5rem 1rem; }
+  .game-instructions { font-size: 0.45rem; letter-spacing: 0.1em; }
+  #footer-bar { padding: 1rem 1.2rem; flex-direction: column; gap: 0.4rem; }
 }
 
 /* ============================================================
