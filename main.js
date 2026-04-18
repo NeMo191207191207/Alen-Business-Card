@@ -266,78 +266,105 @@ function initCarousel() {
   const slides = Array.from(container.querySelectorAll('.intro-photo'));
   if (slides.length < 2) return;
 
-  // Wrap all slides in a track div
+  // Wrap slides in a track
   const track = document.createElement('div');
   track.className = 'carousel-track';
   slides.forEach(s => track.appendChild(s));
   container.appendChild(track);
 
-  // Build dot buttons
+  // Dots
   const dotsEl = document.createElement('div');
   dotsEl.className = 'carousel-dots';
   const dots = slides.map((_, i) => {
     const btn = document.createElement('button');
     btn.className = 'carousel-dot' + (i === 0 ? ' active' : '');
     btn.setAttribute('aria-label', 'Фото ' + (i + 1));
-    btn.addEventListener('click', () => goTo(i));
+    btn.addEventListener('click', () => { goTo(i); resetAuto(); });
     dotsEl.appendChild(btn);
     return btn;
   });
   container.appendChild(dotsEl);
 
-  // Slide counter "01 / 04"
+  // Counter "01 / 04"
   const counter = document.createElement('span');
   counter.className = 'carousel-counter';
   container.appendChild(counter);
 
   let current = 0;
+  const count = slides.length;
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
-  function goTo(index) {
-    current = ((index % slides.length) + slides.length) % slides.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    counter.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+  function goTo(index, instant) {
+    current = ((index % count) + count) % count;
+    track.style.transition = instant
+      ? 'none'
+      : 'transform 0.42s cubic-bezier(0.25, 1, 0.5, 1)';
+    track.style.transform  = `translateX(-${current * 100}%)`;
+    dots.forEach((d, i)   => d.classList.toggle('active', i === current));
+    counter.textContent    = pad(current + 1) + ' / ' + pad(count);
   }
 
-  goTo(0); // set initial state
+  goTo(0, true);
 
-  // Touch swipe
-  let startX = 0;
-  let startTime = 0;
+  // ── Auto-advance every 15 s ──────────────────────────────
+  let autoTimer = setInterval(() => goTo(current + 1), 15000);
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(current + 1), 15000);
+  }
+
+  // ── Touch swipe — only touch events (pointer events fire twice on mobile) ──
+  let t0x = 0, t0y = 0, tCurX = 0;
+  let dragging = false;
+  let horiz    = null; // null=undecided · true=horizontal · false=vertical
 
   container.addEventListener('touchstart', e => {
-    startX    = e.touches[0].clientX;
-    startTime = Date.now();
+    t0x      = e.touches[0].clientX;
+    t0y      = e.touches[0].clientY;
+    tCurX    = t0x;
+    dragging = true;
+    horiz    = null;
+    track.style.transition = 'none'; // instant follow while dragging
+  }, { passive: true });
+
+  container.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const dx = e.touches[0].clientX - t0x;
+    const dy = e.touches[0].clientY - t0y;
+    tCurX = e.touches[0].clientX;
+
+    // Decide direction on first meaningful movement
+    if (horiz === null && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+      horiz = Math.abs(dx) >= Math.abs(dy);
+    }
+
+    if (horiz) {
+      // Live-follow finger: offset relative to current slide
+      const pct = -(current * 100) + (dx / container.offsetWidth * 100);
+      track.style.transform = `translateX(${pct}%)`;
+    }
+    // vertical → page scrolls normally, carousel untouched
   }, { passive: true });
 
   container.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    const dt = Date.now() - startTime;
-    if (Math.abs(dx) > 45 && dt < 450) {
+    if (!dragging) return;
+    dragging = false;
+
+    if (!horiz) { goTo(current); return; } // vertical flick — snap back
+
+    const dx = e.changedTouches[0].clientX - t0x;
+    // Advance if dragged > 25 % of container width
+    if (Math.abs(dx) > container.offsetWidth * 0.25) {
       goTo(dx < 0 ? current + 1 : current - 1);
+    } else {
+      goTo(current); // snap back to current
     }
+    resetAuto();
   }, { passive: true });
 
-  // Pointer drag (mouse / stylus on tablets)
-  let pointerStartX = 0;
-  let pointerDown   = false;
-
-  container.addEventListener('pointerdown', e => {
-    pointerStartX = e.clientX;
-    pointerDown   = true;
-    startTime     = Date.now();
-  }, { passive: true });
-
-  container.addEventListener('pointerup', e => {
-    if (!pointerDown) return;
-    pointerDown = false;
-    const dx = e.clientX - pointerStartX;
-    const dt = Date.now() - startTime;
-    if (Math.abs(dx) > 45 && dt < 450) {
-      goTo(dx < 0 ? current + 1 : current - 1);
-    }
+  container.addEventListener('touchcancel', () => {
+    if (dragging) { dragging = false; goTo(current); }
   }, { passive: true });
 }
 
