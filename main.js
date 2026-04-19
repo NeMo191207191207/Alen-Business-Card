@@ -456,12 +456,23 @@ function initProjectHover() {
    MUSIC PLAYER
    ============================================================ */
 function initMusicPlayer() {
-  const audio = new Audio('audio/ES_I Got You (Instrumental Version) - SRA.mp3');
-  audio.loop    = true;
+  const playlist = [
+    { file: 'audio/HoodTrapJerk \u2014 Billie Jean (www.lightaudio.ru).mp3',  label: 'Billie Jean \u2014 HoodTrapJerk' },
+    { file: 'audio/Childish Gambino - LES (hitmos.fm).mp3',                   label: 'LES \u2014 Childish Gambino' },
+    { file: 'audio/Eslabon Armado \u2014 Jugaste y Sufri (www.lightaudio.ru).mp3', label: 'Jugaste y Sufri \u2014 Eslabon Armado' },
+    { file: 'audio/JMSN_-_Love_Me_76807738.mp3',                              label: 'Love Me \u2014 JMSN' },
+    { file: 'audio/Kanye_West_-_Flashing_Lights_48025583.mp3',                label: 'Flashing Lights \u2014 Kanye West' },
+    { file: 'audio/Pantera.MP3',                                               label: 'Pantera' },
+  ];
+
+  let currentIdx = 0;
+  const audio = new Audio();
   audio.preload = 'metadata';
   audio.volume  = 0.7;
 
   const playBtn      = document.getElementById('player-play');
+  const prevBtn      = document.getElementById('player-prev');
+  const nextBtn      = document.getElementById('player-next');
   const progressFill = document.getElementById('player-progress-fill');
   const progressBar  = document.getElementById('player-progress-wrapper');
   const currentEl    = document.getElementById('player-current');
@@ -471,15 +482,19 @@ function initMusicPlayer() {
 
   let isPlaying = false, rafId = null;
 
-  audio.addEventListener('error', () => {
-    trackName.textContent = 'Drop track.mp3 into /audio/';
-    playBtn.disabled = true;
-    playBtn.style.opacity = '0.3';
-  });
-  audio.addEventListener('loadedmetadata', () => {
-    totalEl.textContent = fmt(audio.duration);
-    trackName.textContent = 'I Got You — SRA';
-  });
+  function loadTrack(idx, autoPlay) {
+    currentIdx = ((idx % playlist.length) + playlist.length) % playlist.length;
+    const track = playlist[currentIdx];
+    audio.src = track.file;
+    trackName.textContent = track.label;
+    totalEl.textContent = '0:00';
+    currentEl.textContent = '0:00';
+    progressFill.style.width = '0%';
+    playBtn.disabled = false;
+    playBtn.style.opacity = '';
+    if (autoPlay) { audio.load(); play(); }
+    else audio.load();
+  }
 
   function tick() {
     if (!audio.duration) return;
@@ -502,8 +517,15 @@ function initMusicPlayer() {
     if (rafId) cancelAnimationFrame(rafId);
   }
 
+  audio.addEventListener('loadedmetadata', () => { totalEl.textContent = fmt(audio.duration); });
+  audio.addEventListener('ended', () => loadTrack(currentIdx + 1, true));
+  audio.addEventListener('error', () => {
+    trackName.textContent = playlist[currentIdx].label + ' (не найден)';
+  });
+
   playBtn.addEventListener('click', () => isPlaying ? pause() : play());
-  audio.addEventListener('ended', pause);
+  prevBtn.addEventListener('click', () => loadTrack(currentIdx - 1, isPlaying));
+  nextBtn.addEventListener('click', () => loadTrack(currentIdx + 1, isPlaying));
 
   function seekFromEvent(e) {
     if (!audio.duration) return;
@@ -519,4 +541,6 @@ function initMusicPlayer() {
     if (!s || isNaN(s)) return '0:00';
     return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   }
+
+  loadTrack(0, false);
 }
