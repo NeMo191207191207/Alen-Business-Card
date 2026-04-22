@@ -2,7 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Alen Troyan — EdTech Producer & FullStack Dev</title>
   <meta name="description" content="Alen Troyan — EdTech Launch Producer and FullStack Developer. Building things that convert.">
 
@@ -105,19 +107,19 @@
       </div>
       <div class="intro-photos">
         <div class="intro-photo">
-          <img src="public/photo_4_2026-04-18_09-21-04.jpg" alt="Alen Troyan — photo 4">
+          <img src="public/photo_4_2026-04-18_09-21-04.jpg" alt="Alen Troyan — photo 4" decoding="async">
           <div class="intro-photo-placeholder"><span>04</span></div>
         </div>
         <div class="intro-photo">
-          <img src="public/photo_2_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 2">
+          <img src="public/photo_2_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 2" loading="lazy" decoding="async">
           <div class="intro-photo-placeholder"><span>02</span></div>
         </div>
         <div class="intro-photo">
-          <img src="public/photo_3_2026-04-18_09-21-04.jpg" alt="Alen Troyan — photo 3">
+          <img src="public/photo_3_2026-04-18_09-21-04.jpg" alt="Alen Troyan — photo 3" loading="lazy" decoding="async">
           <div class="intro-photo-placeholder"><span>03</span></div>
         </div>
         <div class="intro-photo">
-          <img src="public/photo_1_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 1">
+          <img src="public/photo_1_2026-04-18_09-20-41.jpg" alt="Alen Troyan — photo 1" loading="lazy" decoding="async">
           <div class="intro-photo-placeholder"><span>01</span></div>
         </div>
       </div>
@@ -416,10 +418,18 @@
   <!-- Chrome Dino — local copy, no auto-init (removed last line) -->
   <script src="dino.js"></script>
   <script>
-    // Initialize AFTER window.load so all CSS layout is computed and offsetWidth > 0
+    function initDino() {
+      if (typeof Runner === 'undefined' || Runner.instance_) return;
+      var wrapper = document.querySelector('.interstitial-wrapper');
+      if (!wrapper || wrapper.offsetWidth === 0) return false;
+      new Runner('.interstitial-wrapper');
+      return true;
+    }
+    // Primary: window.load (all resources ready, layout fully computed)
     window.addEventListener('load', function() {
-      if (typeof Runner !== 'undefined' && !Runner.instance_) {
-        new Runner('.interstitial-wrapper');
+      if (!initDino()) {
+        // Fallback: try again after next paint in case layout was still pending
+        requestAnimationFrame(function() { setTimeout(initDino, 100); });
       }
     });
   </script>
