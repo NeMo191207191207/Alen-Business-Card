@@ -373,38 +373,12 @@
       </div>
     </div>
 
-    <!-- Game — original Chrome Dino (Chromium source via wayou/t-rex-runner) -->
+    <!-- Dino game — self-contained canvas, no external images -->
     <div id="game-container">
       <p class="footer-label">PLAY DINO</p>
-
-      <!-- Runner outer container — needs explicit width so offsetWidth > 0 on init -->
       <div id="dino-wrapper" class="interstitial-wrapper">
-        <button id="details-button" style="display:none" aria-hidden="true"></button>
         <div class="icon-offline" style="display:none" aria-hidden="true"></div>
       </div>
-
-      <!-- Sprite images (hidden, referenced by Runner.loadImages) -->
-      <div id="offline-resources" style="display:none" aria-hidden="true">
-        <div id="offline-resources-1x">
-          <img id="1x-obstacle-large" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-obstacle-large.png" alt="">
-          <img id="1x-obstacle-small" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-obstacle-small.png" alt="">
-          <img id="1x-cloud"          src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-cloud.png" alt="">
-          <img id="1x-text"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-text.png" alt="">
-          <img id="1x-horizon"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-horizon.png" alt="">
-          <img id="1x-trex"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-trex.png" alt="">
-          <img id="1x-restart"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-restart.png" alt="">
-        </div>
-        <div id="offline-resources-2x">
-          <img id="2x-obstacle-large" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-obstacle-large.png" alt="">
-          <img id="2x-obstacle-small" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-obstacle-small.png" alt="">
-          <img id="2x-cloud"          src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-cloud.png" alt="">
-          <img id="2x-text"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-text.png" alt="">
-          <img id="2x-horizon"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-horizon.png" alt="">
-          <img id="2x-trex"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-trex.png" alt="">
-          <img id="2x-restart"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-restart.png" alt="">
-        </div>
-      </div>
-
       <p class="game-instructions">SPACE / TAP — JUMP &nbsp;|&nbsp; ↓ — DUCK</p>
     </div>
 
@@ -415,21 +389,12 @@
     </div>
   </footer>
 
-  <!-- Chrome Dino — local copy, no auto-init (removed last line) -->
+  <!-- Dino game — self-contained, initialises after DOM + layout ready -->
   <script src="dino.js"></script>
   <script>
-    function initDino() {
-      if (typeof Runner === 'undefined' || Runner.instance_) return;
-      var wrapper = document.querySelector('.interstitial-wrapper');
-      if (!wrapper || wrapper.offsetWidth === 0) return false;
-      new Runner('.interstitial-wrapper');
-      return true;
-    }
-    // Primary: window.load (all resources ready, layout fully computed)
-    window.addEventListener('load', function() {
-      if (!initDino()) {
-        // Fallback: try again after next paint in case layout was still pending
-        requestAnimationFrame(function() { setTimeout(initDino, 100); });
+    window.addEventListener('load', function () {
+      if (typeof Runner !== 'undefined' && !Runner.instance_) {
+        new Runner('.interstitial-wrapper');
       }
     });
   </script>
