@@ -370,13 +370,31 @@ function initCarousel() {
 
 /* ============================================================
    HERO ENTRANCE ANIMATION
+   — Text "draws" left→right (clip-path wipe, mirrors DrawSVG effect)
+   — Then fills #00FF66, matching the requested GSAP DrawSVG timeline
    ============================================================ */
 function initHeroAnimation() {
-  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+  const line = document.querySelector('.hero-display .line');
+  if (!line) return;
+
+  const tl = gsap.timeline();
 
   tl
-    .to('.hero-display .line', { y: 0, duration: 1.0 }, 0.05)
-    .to('.hero-nav',           { opacity: 1, duration: 0.5 }, 0.6);
+    // 1. Slide text into view from below (fast)
+    .to(line, { y: 0, duration: 0.45, ease: 'power4.out' }, 0.05)
+
+    // 2. Draw left → right (clip-path wipe over 2 s, ease matches DrawSVG default)
+    .fromTo(line,
+      { clipPath: 'inset(0 100% 0 0)' },
+      { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut' },
+      0.05
+    )
+
+    // 3. Fill green (starts 0.3 s before draw finishes — matches original timeline)
+    .to('.hero-display', { color: '#00FF66', duration: 0.8, ease: 'power2.out' }, '-=0.3')
+
+    // 4. Nav bar fades in while text is still drawing
+    .to('.hero-nav', { opacity: 1, duration: 0.5 }, 0.6);
 }
 
 /* ============================================================

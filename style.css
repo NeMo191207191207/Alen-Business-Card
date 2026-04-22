@@ -262,7 +262,7 @@ body.cursor--clicking #cursor-ring {
 .line {
   display: block;
   transform: translateY(110%);
-  will-change: transform;
+  will-change: transform, clip-path;
 }
 
 .hero-nav {
