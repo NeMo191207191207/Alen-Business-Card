@@ -812,7 +812,7 @@ body.cursor--clicking #cursor-ring {
   font-size: 0.65rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--gray-400);
+  color: var(--white);
   white-space: nowrap;
   flex-shrink: 0;
 }
