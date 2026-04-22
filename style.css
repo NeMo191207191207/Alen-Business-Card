@@ -138,6 +138,14 @@ button {
   pointer-events: none;
 }
 
+/* Media max-width: 480px */
+  @media (max-width: 480px) {
+    .hero-display {
+    font-size: clamp(3.5rem, 12vw, 7rem) !important;
+    line-height: 0.88 !important;
+    letter-spacing: -0.03em !important;
+    }
+  }
 /* Hover state — meeple turns red, ring expands */
 body.cursor--hovering #cursor-meeple {
   color: var(--red);
@@ -1508,12 +1516,9 @@ body.cursor--clicking #cursor-ring {
 /* ============================================================
    RESPONSIVE — phones (<=480px)
    ============================================================ */
+
 @media (max-width: 480px) {
-  .hero-display {
-    font-size: clamp(3.5rem, 12vw, 7rem) !important;
-    line-height: 0.88 !important;
-    letter-spacing: -0.03em !important;
-  }
+
   .hero-nav {
     gap: 0.5rem !important;
     flex-wrap: wrap;
