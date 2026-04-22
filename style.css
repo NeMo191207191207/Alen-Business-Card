@@ -361,9 +361,9 @@ body.cursor--clicking #cursor-ring {
 
 .intro-bio {
   font-size: 0.82rem;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.85;
-  color: rgba(255,255,255,0.78);
+  color: rgb(255, 255, 255);
   margin-bottom: 2.5rem;
 }
 
