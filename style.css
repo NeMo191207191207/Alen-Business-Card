@@ -1516,13 +1516,9 @@ body.cursor--clicking #cursor-ring {
 @media (max-width: 680px) {
   .nav-links { display: none; }
   .nav-toggle { display: flex; }
-
-  /* Nav always visible on mobile — burger must be reachable without scrolling */
-  #nav {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    transform: translateY(0) !important;
-  }
+  /* #nav behaviour on mobile is the same as desktop:
+     hidden while hero is visible, slides in once hero scrolls out.
+     JS ScrollTrigger handles .visible class. */
 }
 
 /* ============================================================
