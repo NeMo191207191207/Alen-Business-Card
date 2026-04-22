@@ -22,51 +22,54 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ============================================================
-   HERO TEXT AUTO-SIZER
-   Bug fix: measure .line (inner span) not .hero-display,
-   because .line-wrap has overflow:hidden which hides text
-   overflow from the parent's scrollWidth.
+   HERO SVG AUTO-SIZER
+   Binary-searches font-size on the SVG <text> element so that
+   "ALEN TROYAN" fills the viewport edge-to-edge (minus MARGIN).
+   Uses getBBox() instead of scrollWidth so it works on SVG text.
    ============================================================ */
 function fitHeroDisplay() {
-  const el   = document.querySelector('.hero-display');
-  const line = document.querySelector('.hero-display .line');
-  const nav  = document.querySelector('.hero-nav');
-  if (!el || !line) return;
+  const svgEl  = document.getElementById('hero-svg');
+  const textEl = document.getElementById('hero-text');
+  const navEl  = document.querySelector('.hero-nav');
+  if (!svgEl || !textEl) return;
 
   function fit() {
-    const MARGIN = window.innerWidth < 480 ? 14 : 28; // narrower margin on phones
+    const MARGIN   = window.innerWidth < 480 ? 14 : 28;
+    const parentW  = svgEl.parentElement.offsetWidth || window.innerWidth;
+    const availW   = parentW - MARGIN * 2;
 
-    // Apply side margins to title
-    el.style.paddingLeft  = MARGIN + 'px';
-    el.style.paddingRight = MARGIN + 'px';
-
-    // Sync nav horizontal padding to match title
-    if (nav) {
-      nav.style.paddingLeft  = MARGIN + 'px';
-      nav.style.paddingRight = MARGIN + 'px';
+    if (navEl) {
+      navEl.style.paddingLeft  = MARGIN + 'px';
+      navEl.style.paddingRight = MARGIN + 'px';
     }
 
-    // Binary search: find largest font-size where text fits the padded width.
-    // We measure line.scrollWidth (actual text width) vs line.clientWidth
-    // (available width = 100% of el's content area after padding).
+    // Binary search for largest font-size where text width ≤ availW
     let lo = 12, hi = 800;
-    el.style.fontSize = hi + 'px';
-
+    textEl.setAttribute('font-size', hi);
     while (lo < hi - 1) {
-      const mid = (lo + hi) >> 1; // fast floor division by 2
-      el.style.fontSize = mid + 'px';
-      if (line.scrollWidth <= line.clientWidth) lo = mid;
-      else hi = mid;
+      const mid = (lo + hi) >> 1;
+      textEl.setAttribute('font-size', mid);
+      try {
+        if (textEl.getBBox().width <= availW) lo = mid;
+        else hi = mid;
+      } catch (e) { break; }
     }
+    textEl.setAttribute('font-size', lo);
 
-    el.style.fontSize = lo + 'px';
+    // Resize SVG to tightly wrap the text + small vertical padding
+    try {
+      const bbox = textEl.getBBox();
+      const svgH = Math.ceil(bbox.height * 1.12);
+      svgEl.setAttribute('height', svgH);
+      svgEl.setAttribute('viewBox', `0 0 ${parentW} ${svgH}`);
+      textEl.setAttribute('x', MARGIN);
+      textEl.setAttribute('y', Math.ceil(bbox.height * 0.90));
+    } catch (e) {}
   }
 
-  // Run twice: once immediately (approximate), once after fonts fully load (exact)
   fit();
-  document.fonts.ready.then(fit);
+  document.fonts.ready.then(fit); // re-run once Syne font is loaded for pixel-perfect width
 
-  // Re-fit on window resize
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
@@ -370,30 +373,49 @@ function initCarousel() {
 
 /* ============================================================
    HERO ENTRANCE ANIMATION
-   — Text "draws" left→right (clip-path wipe, mirrors DrawSVG effect)
-   — Then fills #00FF66, matching the requested GSAP DrawSVG timeline
+   True per-letter stroke-draw with GSAP stagger.
+   Each <tspan> gets stroke-dasharray/dashoffset animated
+   independently — same technique as GSAP DrawSVG under the hood.
+   Final fill: white (no green).
    ============================================================ */
 function initHeroAnimation() {
-  const line = document.querySelector('.hero-display .line');
-  if (!line) return;
+  const svgEl  = document.getElementById('hero-svg');
+  const tspans = Array.from(document.querySelectorAll('#hero-text tspan'));
+  if (!tspans.length) return;
+
+  const DASH = 3000; // larger than any single letter's stroke perimeter
+
+  // Set initial state: stroke hidden, fill transparent
+  gsap.set(tspans, {
+    attr: { 'stroke-dasharray': DASH, 'stroke-dashoffset': DASH }
+  });
+
+  // SVG starts below the wrapper (mirrors original .line translateY)
+  gsap.set(svgEl, { y: '115%' });
 
   const tl = gsap.timeline();
 
   tl
-    // 1. Slide text into view from below (fast)
-    .to(line, { y: 0, duration: 0.45, ease: 'power4.out' }, 0.05)
+    // 1. Slide the whole SVG up into view
+    .to(svgEl, { y: 0, duration: 0.5, ease: 'power4.out' }, 0.05)
 
-    // 2. Draw left → right (clip-path wipe over 2 s, ease matches DrawSVG default)
-    .fromTo(line,
-      { clipPath: 'inset(0 100% 0 0)' },
-      { clipPath: 'inset(0 0% 0 0)', duration: 2, ease: 'power2.inOut' },
-      0.05
-    )
+    // 2. Draw each letter's stroke with stagger — mirrors DrawSVG "0%" → "100%"
+    .to(tspans, {
+      attr: { 'stroke-dashoffset': 0 },
+      duration: 1.1,
+      stagger: 0.09,
+      ease: 'power2.inOut'
+    }, 0.2)
 
-    // 3. Fill green (starts 0.3 s before draw finishes — matches original timeline)
-    .to('.hero-display', { color: '#00FF66', duration: 0.8, ease: 'power2.out' }, '-=0.3')
+    // 3. Fill each letter white with stagger — mirrors .to(fill) in original code
+    .to(tspans, {
+      attr: { fill: '#ffffff' },
+      duration: 0.45,
+      stagger: 0.07,
+      ease: 'power2.out'
+    }, '-=0.35')
 
-    // 4. Nav bar fades in while text is still drawing
+    // 4. Nav bar fades in while text is drawing
     .to('.hero-nav', { opacity: 1, duration: 0.5 }, 0.6);
 }
 

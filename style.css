@@ -238,31 +238,15 @@ body.cursor--clicking #cursor-ring {
   border-bottom: 1px solid var(--gray-600);
 }
 
+.hero-display-wrap {
+  overflow: hidden;
+  width: 100%;
+}
+
 .hero-display {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 7vw;
-  line-height: 0.88;
-  letter-spacing: -0.025em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--white);
   display: block;
   width: 100%;
-  padding-top: 0.04em;
-  padding-bottom: 0.06em;
-  box-sizing: border-box; /* JS injects horizontal padding */
-}
-
-.line-wrap {
-  display: block;
-  overflow: hidden;
-}
-
-.line {
-  display: block;
-  transform: translateY(110%);
-  will-change: transform, clip-path;
+  overflow: visible;
 }
 
 .hero-nav {

@@ -36,11 +36,11 @@
 
   <!-- Fixed nav — invisible initially, appears on scroll -->
   <header id="nav">
-    <div class="nav-logo" data-magnetic>TROY</div>
+    <div class="nav-logo" data-magnetic><a href="#hero">TROY</a></div>
     <nav class="nav-links">
       <a href="#about" data-magnetic>About</a>
-      <a href="#skills" data-magnetic>Stack</a>
       <a href="#work" data-magnetic>Work</a>
+      <a href="#skills" data-magnetic>Stack</a>
       <a href="#contact" data-magnetic>Contact</a>
     </nav>
     <button class="nav-toggle" id="nav-toggle" aria-label="Меню" aria-expanded="false">
@@ -76,9 +76,22 @@
     <!-- Hero — edge-to-edge, studiolinear 1:1 -->
     <section id="hero">
 
-      <h1 class="hero-display">
-        <span class="line-wrap"><span class="line">ALEN TROYAN</span></span>
-      </h1>
+      <!-- SVG hero text: each letter is a <tspan> so GSAP can stagger stroke-draw per letter -->
+      <div class="hero-display-wrap">
+        <svg class="hero-display" id="hero-svg" width="100%" height="130"
+             aria-label="ALEN TROYAN" role="heading" aria-level="1">
+          <text id="hero-text"
+            x="28" y="108"
+            font-family="Syne, 'Arial Black', sans-serif"
+            font-weight="800"
+            font-size="120"
+            fill="transparent"
+            stroke="white"
+            stroke-width="1.5"
+            paint-order="stroke fill"
+          ><tspan>A</tspan><tspan>L</tspan><tspan>E</tspan><tspan>N</tspan><tspan> </tspan><tspan>T</tspan><tspan>R</tspan><tspan>O</tspan><tspan>Y</tspan><tspan>A</tspan><tspan>N</tspan></text>
+        </svg>
+      </div>
 
       <nav class="hero-nav">
         <a href="#about" data-magnetic>ABOUT</a>
@@ -144,6 +157,65 @@
       </div>
     </section>
 
+    
+    <!-- Work -->
+    <section id="work">
+      <div class="section-header">
+        <p class="section-label reveal-up">003 — WORK</p>
+        <h2 class="section-title reveal-up">Проекты</h2>
+      </div>
+      <div class="projects-list">
+        <div class="project-item reveal-up">
+          <span class="project-num">01</span>
+          <div class="project-info">
+            <h3 class="project-title">EdTech Platform</h3>
+            <p class="project-desc">Образовательная платформа с автоматизированными воронками продаж</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">2025</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">02</span>
+          <div class="project-info">
+            <h3 class="project-title">Launch System</h3>
+            <p class="project-desc">Система управления запусками онлайн-курсов с аналитикой</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">Python</span>
+            <span class="tag">2024</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">03</span>
+          <div class="project-info">
+            <h3 class="project-title">CRM Integration</h3>
+            <p class="project-desc">Интеграция CRM с образовательными платформами и мессенджерами</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">API</span>
+            <span class="tag">Docker</span>
+            <span class="tag">2024</span>
+          </div>
+        </div>
+        <div class="project-item reveal-up">
+          <span class="project-num">04</span>
+          <div class="project-info">
+            <h3 class="project-title">Business Card Site</h3>
+            <p class="project-desc">Этот самый сайт — визитка с игрой и музыкой</p>
+          </div>
+          <div class="project-tags">
+            <span class="tag">GSAP</span>
+            <span class="tag">Canvas</span>
+            <span class="tag">2026</span>
+          </div>
+        </div>
+      </div>
+      
+    </section>
     <!-- Skills -->
     <section id="skills">
       <div class="section-header">
@@ -238,64 +310,6 @@
       </div>
     </section>
 
-    <!-- Work -->
-    <section id="work">
-      <div class="section-header">
-        <p class="section-label reveal-up">003 — WORK</p>
-        <h2 class="section-title reveal-up">Проекты</h2>
-      </div>
-      <div class="projects-list">
-        <div class="project-item reveal-up">
-          <span class="project-num">01</span>
-          <div class="project-info">
-            <h3 class="project-title">EdTech Platform</h3>
-            <p class="project-desc">Образовательная платформа с автоматизированными воронками продаж</p>
-          </div>
-          <div class="project-tags">
-            <span class="tag">React</span>
-            <span class="tag">Node.js</span>
-            <span class="tag">2025</span>
-          </div>
-        </div>
-        <div class="project-item reveal-up">
-          <span class="project-num">02</span>
-          <div class="project-info">
-            <h3 class="project-title">Launch System</h3>
-            <p class="project-desc">Система управления запусками онлайн-курсов с аналитикой</p>
-          </div>
-          <div class="project-tags">
-            <span class="tag">Next.js</span>
-            <span class="tag">Python</span>
-            <span class="tag">2024</span>
-          </div>
-        </div>
-        <div class="project-item reveal-up">
-          <span class="project-num">03</span>
-          <div class="project-info">
-            <h3 class="project-title">CRM Integration</h3>
-            <p class="project-desc">Интеграция CRM с образовательными платформами и мессенджерами</p>
-          </div>
-          <div class="project-tags">
-            <span class="tag">API</span>
-            <span class="tag">Docker</span>
-            <span class="tag">2024</span>
-          </div>
-        </div>
-        <div class="project-item reveal-up">
-          <span class="project-num">04</span>
-          <div class="project-info">
-            <h3 class="project-title">Business Card Site</h3>
-            <p class="project-desc">Этот самый сайт — визитка с игрой и музыкой</p>
-          </div>
-          <div class="project-tags">
-            <span class="tag">GSAP</span>
-            <span class="tag">Canvas</span>
-            <span class="tag">2026</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Contact -->
     <section id="contact">
       <div class="contact-inner">
@@ -373,11 +387,32 @@
       </div>
     </div>
 
-    <!-- Dino game — self-contained canvas, no external images -->
+    <!-- Original Chrome Dino (wayou/t-rex-runner) -->
     <div id="game-container">
       <p class="footer-label">PLAY DINO</p>
       <div id="dino-wrapper" class="interstitial-wrapper">
+        <button id="details-button" style="display:none" aria-hidden="true"></button>
         <div class="icon-offline" style="display:none" aria-hidden="true"></div>
+      </div>
+      <div id="offline-resources" style="display:none" aria-hidden="true">
+        <div id="offline-resources-1x">
+          <img id="1x-obstacle-large" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-obstacle-large.png" alt="">
+          <img id="1x-obstacle-small" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-obstacle-small.png" alt="">
+          <img id="1x-cloud"          src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-cloud.png" alt="">
+          <img id="1x-text"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-text.png" alt="">
+          <img id="1x-horizon"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-horizon.png" alt="">
+          <img id="1x-trex"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-trex.png" alt="">
+          <img id="1x-restart"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/1x-restart.png" alt="">
+        </div>
+        <div id="offline-resources-2x">
+          <img id="2x-obstacle-large" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-obstacle-large.png" alt="">
+          <img id="2x-obstacle-small" src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-obstacle-small.png" alt="">
+          <img id="2x-cloud"          src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-cloud.png" alt="">
+          <img id="2x-text"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-text.png" alt="">
+          <img id="2x-horizon"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-horizon.png" alt="">
+          <img id="2x-trex"           src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-trex.png" alt="">
+          <img id="2x-restart"        src="https://cdn.jsdelivr.net/gh/wayou/t-rex-runner@master/img/2x-restart.png" alt="">
+        </div>
       </div>
       <p class="game-instructions">SPACE / TAP — JUMP &nbsp;|&nbsp; ↓ — DUCK</p>
     </div>
