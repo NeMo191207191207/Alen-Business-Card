@@ -182,6 +182,12 @@
   height: 34px;
 }
 
+#nav .theme-toggle .theme-icon--sun,
+#nav .theme-toggle .theme-icon--moon {
+  width: 28px;
+  height: 28px;
+}
+
 /* ============================================================
    RESET & BASE
    ============================================================ */
