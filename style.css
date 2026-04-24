@@ -95,7 +95,7 @@
 
 /* About deco — barely visible on white, turns green on hover */
 [data-theme="light"] .about-deco {
-  -webkit-text-stroke: 1.5px #585858;
+  -webkit-text-stroke: 1.5px #838383;
 }
 
 /* Keep text white on green hover fills */
