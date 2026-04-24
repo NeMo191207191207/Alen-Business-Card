@@ -392,7 +392,7 @@ function initHeroAnimation() {
   gsap.set(tspans, { attr: { 'stroke-dasharray': DASH, 'stroke-dashoffset': DASH } });
   gsap.set(svgEl, { y: '115%' });
 
-  const tl = gsap.timeline();
+  const tl = gsap.timeline({ onComplete: () => { window._heroAnimDone = true; } });
   tl
     .to(svgEl,   { y: 0, duration: 0.5, ease: 'power4.out' }, 0.05)
     .to(tspans,  { attr: { 'stroke-dashoffset': 0 }, duration: 1.1, stagger: 0.09, ease: 'power2.inOut' }, 0.2)
@@ -574,29 +574,33 @@ function initMusicPlayer() {
    ============================================================ */
 function initThemeToggle() {
   const saved = localStorage.getItem('theme') || 'dark';
-  applyTheme(saved);
 
+  // On initial load: only set the attribute — do NOT touch SVG fill.
+  // The hero animation runs next and must start with fill=transparent.
+  document.documentElement.setAttribute('data-theme', saved);
+  syncMetaColor(saved);
+
+  // heroAnimDone is set to true by initHeroAnimation() via onComplete callback.
+  // Only after that do we sync fill when the user toggles the theme.
   document.querySelectorAll('.theme-toggle').forEach(btn => {
     btn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
-      applyTheme(current === 'light' ? 'dark' : 'light');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      syncMetaColor(next);
+
+      // Only update hero fill after animation has already filled the letters
+      if (window._heroAnimDone) {
+        const fill = next === 'light' ? '#0a0a0a' : '#ffffff';
+        gsap.set(document.querySelectorAll('#hero-text tspan'), { attr: { fill } });
+      }
     });
   });
 
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-
-    // Sync hero SVG fill if letters are already filled (animation done)
-    const tspans = Array.from(document.querySelectorAll('#hero-text tspan'));
-    if (tspans.length) {
-      const fill = theme === 'light' ? '#0a0a0a' : '#ffffff';
-      gsap.set(tspans, { attr: { fill } });
-    }
-
-    // Sync browser chrome color
+  function syncMetaColor(theme) {
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme === 'light' ? '#faf5ee' : '#000000');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#ffffff' : '#000000');
   }
 }
 
