@@ -606,35 +606,45 @@ function initThemeToggle() {
 
 /* ============================================================
    DINO FIX
-   Runner only handles keydown, not mouse clicks.
-   1. Click anywhere in game-container → simulate space keydown.
-   2. While cursor hovers game-container, capture space keydown
-      before the browser scrolls the page.
+   Root cause: loadSounds() crashes without #audio-resources template.
+   Patch: disable sounds on Runner instance (index.html inline script).
+   This file handles: click/tap → jump/start/restart + space scroll block.
    ============================================================ */
 function initDinoFix() {
   const gameContainer = document.getElementById('game-container');
   if (!gameContainer) return;
 
   let gameHovered = false;
-  gameContainer.addEventListener('mouseenter', () => { gameHovered = true;  });
+  gameContainer.addEventListener('mouseenter', () => { gameHovered = true; });
   gameContainer.addEventListener('mouseleave', () => { gameHovered = false; });
 
-  // Click → trigger jump/start directly on the Runner instance
+  // Mouse click → jump, start, or restart
   gameContainer.addEventListener('click', () => {
     gameHovered = true;
-    triggerRunnerSpace();
+    triggerAction();
   });
 
-  // Prevent page scroll on space when hovering; Runner's own listener handles the rest
+  // Touch tap → same (mobile)
+  gameContainer.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    triggerAction();
+  }, { passive: false });
+
+  // Block page scroll on space while hovering
   document.addEventListener('keydown', (e) => {
     if (gameHovered && (e.code === 'Space' || e.keyCode === 32)) {
       e.preventDefault();
     }
   }, { capture: true });
 
-  function triggerRunnerSpace() {
-    if (typeof Runner !== 'undefined' && Runner.instance_) {
-      Runner.instance_.onKeyDown({ keyCode: 32, type: 'keydown', preventDefault() {} });
+  function triggerAction() {
+    if (typeof Runner === 'undefined' || !Runner.instance_) return;
+    const r = Runner.instance_;
+    if (r.crashed) {
+      r.restart();
+    } else {
+      r.onKeyDown({ keyCode: 32, type: 'keydown', preventDefault() {} });
+      setTimeout(() => r.onKeyUp({ keyCode: 32, type: 'keyup', preventDefault() {} }), 80);
     }
   }
 }

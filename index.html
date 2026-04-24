@@ -430,7 +430,9 @@
   <script>
     window.addEventListener('load', function () {
       if (typeof Runner !== 'undefined' && !Runner.instance_) {
-        new Runner('.interstitial-wrapper');
+        var r = new Runner('.interstitial-wrapper');
+        // No audio-resources template → disable sounds to prevent crash on first input
+        r.loadSounds = function() {};
       }
     });
   </script>
