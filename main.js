@@ -8,6 +8,7 @@ const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').m
 document.addEventListener('DOMContentLoaded', () => {
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
+  initThemeToggle();   // first — sets data-theme before animations read it
   fitHeroDisplay();
   if (!isTouchDevice) initCursor();
   initNav();
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!isTouchDevice) initMagneticElements();
   initProjectHover();
   initMusicPlayer();
+  initDinoFix();
 });
 
 /* ============================================================
@@ -383,39 +385,18 @@ function initHeroAnimation() {
   const tspans = Array.from(document.querySelectorAll('#hero-text tspan'));
   if (!tspans.length) return;
 
-  const DASH = 3000; // larger than any single letter's stroke perimeter
+  const DASH = 3000;
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  const FILL    = isLight ? '#1c0f06' : '#ffffff';
 
-  // Set initial state: stroke hidden, fill transparent
-  gsap.set(tspans, {
-    attr: { 'stroke-dasharray': DASH, 'stroke-dashoffset': DASH }
-  });
-
-  // SVG starts below the wrapper (mirrors original .line translateY)
+  gsap.set(tspans, { attr: { 'stroke-dasharray': DASH, 'stroke-dashoffset': DASH } });
   gsap.set(svgEl, { y: '115%' });
 
   const tl = gsap.timeline();
-
   tl
-    // 1. Slide the whole SVG up into view
-    .to(svgEl, { y: 0, duration: 0.5, ease: 'power4.out' }, 0.05)
-
-    // 2. Draw each letter's stroke with stagger — mirrors DrawSVG "0%" → "100%"
-    .to(tspans, {
-      attr: { 'stroke-dashoffset': 0 },
-      duration: 1.1,
-      stagger: 0.09,
-      ease: 'power2.inOut'
-    }, 0.2)
-
-    // 3. Fill each letter white with stagger — mirrors .to(fill) in original code
-    .to(tspans, {
-      attr: { fill: '#ffffff' },
-      duration: 0.45,
-      stagger: 0.07,
-      ease: 'power2.out'
-    }, '-=0.35')
-
-    // 4. Nav bar fades in while text is drawing
+    .to(svgEl,   { y: 0, duration: 0.5, ease: 'power4.out' }, 0.05)
+    .to(tspans,  { attr: { 'stroke-dashoffset': 0 }, duration: 1.1, stagger: 0.09, ease: 'power2.inOut' }, 0.2)
+    .to(tspans,  { attr: { fill: FILL }, duration: 0.45, stagger: 0.07, ease: 'power2.out' }, '-=0.35')
     .to('.hero-nav', { opacity: 1, duration: 0.5 }, 0.6);
 }
 
@@ -584,4 +565,72 @@ function initMusicPlayer() {
   }
 
   loadTrack(0, false);
+}
+
+/* ============================================================
+   THEME TOGGLE
+   Saves to localStorage, updates data-theme on <html>,
+   syncs hero SVG fill color if animation has already run.
+   ============================================================ */
+function initThemeToggle() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  applyTheme(saved);
+
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      applyTheme(current === 'light' ? 'dark' : 'light');
+    });
+  });
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+
+    // Sync hero SVG fill if letters are already filled (animation done)
+    const tspans = Array.from(document.querySelectorAll('#hero-text tspan'));
+    if (tspans.length) {
+      const fill = theme === 'light' ? '#1c0f06' : '#ffffff';
+      gsap.set(tspans, { attr: { fill } });
+    }
+
+    // Sync browser chrome color
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#faf5ee' : '#000000');
+  }
+}
+
+/* ============================================================
+   DINO FIX
+   Runner only handles keydown, not mouse clicks.
+   1. Click anywhere in game-container → simulate space keydown.
+   2. While cursor hovers game-container, capture space keydown
+      before the browser scrolls the page.
+   ============================================================ */
+function initDinoFix() {
+  const gameContainer = document.getElementById('game-container');
+  if (!gameContainer) return;
+
+  let gameHovered = false;
+  gameContainer.addEventListener('mouseenter', () => { gameHovered = true;  });
+  gameContainer.addEventListener('mouseleave', () => { gameHovered = false; });
+
+  // Click → trigger jump/start directly on the Runner instance
+  gameContainer.addEventListener('click', () => {
+    gameHovered = true;
+    triggerRunnerSpace();
+  });
+
+  // Prevent page scroll on space when hovering; Runner's own listener handles the rest
+  document.addEventListener('keydown', (e) => {
+    if (gameHovered && (e.code === 'Space' || e.keyCode === 32)) {
+      e.preventDefault();
+    }
+  }, { capture: true });
+
+  function triggerRunnerSpace() {
+    if (typeof Runner !== 'undefined' && Runner.instance_) {
+      Runner.instance_.onKeyDown({ keyCode: 32, type: 'keydown', preventDefault() {} });
+    }
+  }
 }
