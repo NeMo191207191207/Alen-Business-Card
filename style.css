@@ -142,10 +142,10 @@
    THEME TOGGLE BUTTON
    ============================================================ */
 .theme-toggle {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--gray-400);
+  border: none;
   background: none;
   display: flex;
   align-items: center;
@@ -153,13 +153,12 @@
   flex-shrink: 0;
   cursor: none;
   color: var(--gray-300);
-  transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  transition: color 0.25s ease, transform 0.25s ease;
 }
 
 .theme-toggle:hover {
-  border-color: var(--white);
   color: var(--white);
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 /* Sun = dark mode button (click → light)  Moon = light mode button (click → dark) */
@@ -179,8 +178,8 @@
 }
 
 .hero-nav .theme-toggle {
-  width: 26px;
-  height: 26px;
+  width: 34px;
+  height: 34px;
 }
 
 /* ============================================================
