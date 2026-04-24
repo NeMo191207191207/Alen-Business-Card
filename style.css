@@ -182,13 +182,10 @@
   height: 34px;
 }
 
-#nav .theme-toggle .theme-icon--sun {
+#nav .theme-toggle .theme-icon--sun,
+#nav .theme-toggle .theme-icon--moon {
   width: 40px;
   height: 40px;
-}
-#nav .theme-toggle .theme-icon--moon {
-  width: 35px;
-  height: 35px;
 }
 
 /* ============================================================
