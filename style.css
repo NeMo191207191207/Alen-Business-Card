@@ -37,9 +37,9 @@
   --gray-800:  #faf7f2;   /* stack + skill card bg */
   --gray-600:  #e8e8e8;   /* borders */
   --gray-500:  #e5dfd4;   /* skill grid gaps */
-  --gray-400:  #888888;   /* muted text, nav links */
-  --gray-300:  #bbbbbb;   /* project nums, cat labels */
-  --gray-200:  #cccccc;   /* footer copy */
+  --gray-400:  #3a3a3a;   /* muted text, nav links */
+  --gray-300:  #555555;   /* project nums, cat labels */
+  --gray-200:  #444444;   /* footer copy */
   --white:     #0a0a0a;   /* text */
   --red:       #059669;   /* accent → green */
   --red-dark:  #047857;
@@ -158,7 +158,7 @@
 
 .theme-toggle:hover {
   color: var(--white);
-  transform: scale(1.15);
+  transform: scale(1.20);
 }
 
 /* Sun = dark mode button (click → light)  Moon = light mode button (click → dark) */
