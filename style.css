@@ -1672,7 +1672,7 @@ body.cursor--clicking #cursor-ring {
   /* #nav behaviour on mobile is the same as desktop:
      hidden while hero is visible, slides in once hero scrolls out.
      JS ScrollTrigger handles .visible class. */
-  #nav .theme-toggle { margin-left: auto; }
+  #nav .theme-toggle { margin-left: auto; margin-right: 10px;}
 }
 
 /* ============================================================
