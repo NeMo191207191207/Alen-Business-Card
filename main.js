@@ -387,7 +387,7 @@ function initHeroAnimation() {
 
   const DASH = 3000;
   const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-  const FILL    = isLight ? '#1c0f06' : '#ffffff';
+  const FILL    = isLight ? '#0a0a0a' : '#ffffff';
 
   gsap.set(tspans, { attr: { 'stroke-dasharray': DASH, 'stroke-dashoffset': DASH } });
   gsap.set(svgEl, { y: '115%' });
@@ -590,7 +590,7 @@ function initThemeToggle() {
     // Sync hero SVG fill if letters are already filled (animation done)
     const tspans = Array.from(document.querySelectorAll('#hero-text tspan'));
     if (tspans.length) {
-      const fill = theme === 'light' ? '#1c0f06' : '#ffffff';
+      const fill = theme === 'light' ? '#0a0a0a' : '#ffffff';
       gsap.set(tspans, { attr: { fill } });
     }
 
