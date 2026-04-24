@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Local writable stylesheet must be first so dino.js insertRule targets it, not cross-origin Google Fonts -->
+  <style id="dino-style"></style>
   <!-- Prevent flash of wrong theme on reload -->
   <script>
     (function(){var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
